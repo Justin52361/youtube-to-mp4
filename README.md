@@ -4,7 +4,7 @@ A Windows desktop app (WPF, .NET 10) for downloading YouTube videos and playlist
 
 ## Download
 
-Grab `YoutubeToMp4.exe` from the [latest release](../../releases/latest). It is self-contained (Windows x64), so no .NET install is needed. On first launch the app downloads yt-dlp and ffmpeg automatically if they are missing.
+Grab `YoutubeToMp4.exe` from the [latest release](../../releases/latest). It is small but needs the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows x64); if it's missing, Windows shows a prompt with the download link. On first launch the app downloads yt-dlp and ffmpeg automatically if they are missing.
 
 ## Features
 
@@ -26,10 +26,10 @@ Requires the .NET 10 SDK on Windows.
 dotnet run
 ```
 
-To produce the single-file executable:
+To produce the framework-dependent executable (`bin\publish\YoutubeToMp4.exe`):
 
 ```
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+.\publish.ps1
 ```
 
 ## Disclaimer

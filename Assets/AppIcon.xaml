@@ -1,0 +1,55 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- App icon: YouTube play button with a pirate hat. 512x512 design space. -->
+    <DrawingImage x:Key="AppIconImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.ClipGeometry>
+                    <RectangleGeometry Rect="0,0,512,512"/>
+                </DrawingGroup.ClipGeometry>
+
+                <GeometryDrawing Brush="#1D2027">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,512,512" RadiusX="112" RadiusY="112"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <GeometryDrawing Brush="#E8312A">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="56,168,400,280" RadiusX="84" RadiusY="84"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <GeometryDrawing Brush="White" Geometry="M214,252 L214,364 L322,308 Z">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="White" Thickness="14" LineJoin="Round"/>
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+
+                <DrawingGroup>
+                    <DrawingGroup.Transform>
+                        <RotateTransform Angle="-7" CenterX="256" CenterY="130"/>
+                    </DrawingGroup.Transform>
+
+                    <GeometryDrawing Brush="#0B0C0F"
+                                     Geometry="M40,176 C70,150 92,118 112,84 C150,40 210,26 256,26 C302,26 362,40 400,84 C420,118 442,150 472,176 C430,164 396,158 360,158 C320,150 192,150 152,158 C116,158 82,164 40,176 Z"/>
+                    <GeometryDrawing Geometry="M48,176 C86,166 120,160 154,160 C192,152 320,152 358,160 C392,160 426,166 464,176">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#F2B632" Thickness="9" StartLineCap="Round" EndLineCap="Round"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="White"
+                                     Geometry="M256,62 C238,62 224,75 224,92 C224,103 229,111 237,116 L237,128 L275,128 L275,116 C283,111 288,103 288,92 C288,75 274,62 256,62 Z"/>
+                    <GeometryDrawing Brush="#0B0C0F"
+                                     Geometry="M237,92 A7,7 0 1 0 251,92 A7,7 0 1 0 237,92 Z M261,92 A7,7 0 1 0 275,92 A7,7 0 1 0 261,92 Z M256,101 L252,110 L260,110 Z"/>
+                    <GeometryDrawing Geometry="M196,112 L226,134 M316,112 L286,134">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="White" Thickness="8" StartLineCap="Round" EndLineCap="Round"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+</ResourceDictionary>

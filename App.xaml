@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="Assets/AppIcon.xaml"/>
+        </ResourceDictionary.MergedDictionaries>
 
         <SolidColorBrush x:Key="Bg" Color="#0F151D"/>
         <SolidColorBrush x:Key="Bar" Color="#0A0F15"/>
@@ -181,5 +185,6 @@
             </Setter>
         </Style>
 
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
