@@ -1,0 +1,351 @@
+<Window x:Class="YoutubeToMp4.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:m="clr-namespace:YoutubeToMp4.Models"
+        Title="YouTube to MP4" Width="1180" Height="780" MinWidth="1000" MinHeight="660"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Bg}" Foreground="{StaticResource Text}"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="14">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="68" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="68"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title bar -->
+        <Border Grid.Row="0" Background="{StaticResource Bar}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+            <Grid Margin="18,0,20,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Viewbox Width="52" Height="52" AutomationProperties.Name="Video download icon">
+                        <Canvas Width="64" Height="64">
+                            <Rectangle Canvas.Left="4" Canvas.Top="14" Width="56" Height="36" RadiusX="11" RadiusY="11" Fill="#E5342F"/>
+                            <Polygon Points="26,23 26,41 43,32" Fill="White"/>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="YouTube → MP4" Margin="14,0,0,0" VerticalAlignment="Center" FontSize="24" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Style="{StaticResource IconButton}" Click="OnSettings" AutomationProperties.Name="Settings" Margin="0,0,8,0">
+                        <Path Stroke="{StaticResource Soft}" StrokeThickness="1.8" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Width="20" Height="20" Stretch="Uniform"
+                              Data="M9,12 A3,3 0 1 0 15,12 A3,3 0 1 0 9,12 M19.4,15 a1.65,1.65 0 0 0 .33,1.82 l.06,.06 a2,2 0 0 1 0,2.83 2,2 0 0 1 -2.83,0 l-.06,-.06 a1.65,1.65 0 0 0 -1.82,-.33 1.65,1.65 0 0 0 -1,1.51 V21 a2,2 0 0 1 -2,2 2,2 0 0 1 -2,-2 v-.09 A1.65,1.65 0 0 0 9,19.4 a1.65,1.65 0 0 0 -1.82,.33 l-.06,.06 a2,2 0 0 1 -2.83,0 2,2 0 0 1 0,-2.83 l.06,-.06 a1.65,1.65 0 0 0 .33,-1.82 1.65,1.65 0 0 0 -1.51,-1 H3 a2,2 0 0 1 -2,-2 2,2 0 0 1 2,-2 h.09 A1.65,1.65 0 0 0 4.6,9 a1.65,1.65 0 0 0 -.33,-1.82 l-.06,-.06 a2,2 0 0 1 0,-2.83 2,2 0 0 1 2.83,0 l.06,.06 a1.65,1.65 0 0 0 1.82,.33 H9 a1.65,1.65 0 0 0 1,-1.51 V3 a2,2 0 0 1 2,-2 2,2 0 0 1 2,2 v.09 a1.65,1.65 0 0 0 1,1.51 1.65,1.65 0 0 0 1.82,-.33 l.06,-.06 a2,2 0 0 1 2.83,0 2,2 0 0 1 0,2.83 l-.06,.06 a1.65,1.65 0 0 0 -.33,1.82 V9 a1.65,1.65 0 0 0 1.51,1 H21 a2,2 0 0 1 2,2 2,2 0 0 1 -2,2 h-.09 a1.65,1.65 0 0 0 -1.51,1 z"/>
+                    </Button>
+                    <Button Style="{StaticResource IconButton}" Click="OnMinimize" AutomationProperties.Name="Minimize">
+                        <Path Stroke="{StaticResource Soft}" StrokeThickness="2" Data="M0,0 L16,0" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                    </Button>
+                    <Button Style="{StaticResource IconButton}" Click="OnClose" AutomationProperties.Name="Close">
+                        <Path Stroke="{StaticResource Soft}" StrokeThickness="2" Data="M0,0 L14,14 M14,0 L0,14" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Body -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="360"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: add link and queue -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="Video or playlist link" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <TextBox x:Name="UrlBox" Style="{StaticResource FieldBox}" Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}"
+                                         AutomationProperties.Name="Video or playlist link">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Return" Command="{Binding AddCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <TextBlock Text="Paste a video or playlist link" Foreground="{StaticResource Muted}" IsHitTestVisible="False"
+                                           VerticalAlignment="Center" Margin="15,0,0,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text, ElementName=UrlBox}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                            <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Command="{Binding AddCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,5 L12,19 M5,12 L19,12" Stroke="{StaticResource GoldInk}" StrokeThickness="2.2" Width="16" Height="16" Stretch="Uniform"
+                                          StrokeStartLineCap="Round" StrokeEndLineCap="Round" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Add to queue" Foreground="{StaticResource GoldInk}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <WrapPanel Margin="0,12,0,0">
+                            <Border Background="{StaticResource Bg}" BorderBrush="{StaticResource Field}" BorderThickness="1" CornerRadius="12" Padding="10,3" Margin="0,0,10,0">
+                                <TextBlock Text="MP4" FontSize="13"/>
+                            </Border>
+                            <Border Background="{StaticResource Bg}" BorderBrush="{StaticResource Field}" BorderThickness="1" CornerRadius="12" Padding="10,3" Margin="0,0,10,0">
+                                <TextBlock Text="{Binding QualityText}" FontSize="13"/>
+                            </Border>
+                            <TextBlock Text="Saves to" Foreground="{StaticResource Muted}" FontSize="13" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="{Binding OutputDir}" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0"
+                                       TextTrimming="CharacterEllipsis" MaxWidth="360" ToolTip="{Binding OutputDir}"/>
+                            <Button Style="{StaticResource OutlineButton}" Content="Change" Command="{Binding ChangeFolderCommand}"
+                                    MinHeight="32" Padding="12,0" FontSize="13" FontWeight="Normal" VerticalAlignment="Center"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="16,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Queue" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding QueueSummary}" Foreground="{StaticResource Muted}" FontSize="13" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Style="{StaticResource OutlineButton}" Content="Retry failed" Command="{Binding RetryCommand}" Margin="0,0,8,0">
+                                <Button.Visibility>
+                                    <Binding Path="HasFailed">
+                                        <Binding.Converter><BooleanToVisibilityConverter/></Binding.Converter>
+                                    </Binding>
+                                </Button.Visibility>
+                            </Button>
+                            <Button Grid.Column="2" Style="{StaticResource OutlineButton}" Command="{Binding PauseCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{Binding PauseIcon}" Fill="{StaticResource Text}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                                    <TextBlock Text="{Binding PauseLabel}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Column="3" Style="{StaticResource OutlineButton}" Command="{Binding CancelAllCommand}" Margin="8,0,0,0"
+                                    Foreground="#FF8A5C" BorderBrush="#6A3B28">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M0,0 L12,12 M12,0 L0,12" Stroke="#FF8A5C" StrokeThickness="2.2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Cancel all" FontWeight="SemiBold" Foreground="#FF8A5C" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <!-- Block / hold notice -->
+                        <Border Grid.Row="1" Background="{StaticResource Bg}" BorderBrush="{Binding AlertBrush}" BorderThickness="0,1" Padding="16,10">
+                            <Border.Visibility>
+                                <Binding Path="HasAlert">
+                                    <Binding.Converter><BooleanToVisibilityConverter/></Binding.Converter>
+                                </Binding>
+                            </Border.Visibility>
+                            <TextBlock Text="{Binding AlertText}" Foreground="{Binding AlertBrush}" TextWrapping="Wrap" FontSize="13"/>
+                        </Border>
+
+                        <ListBox Grid.Row="2" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0"
+                                 HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 Focusable="False" AutomationProperties.Name="Download queue">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Focusable" Value="False"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border BorderBrush="{StaticResource RowLine}" BorderThickness="0,0,0,1" Padding="16,10">
+                                                    <ContentPresenter/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type m:QueueItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="84"/>
+                                            <ColumnDefinition Width="14"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="14"/>
+                                            <ColumnDefinition Width="150"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Grid.Column="0" Width="84" Height="48" Background="{StaticResource Thumb}">
+                                            <Grid>
+                                                <Path Data="M8,5 L19,12 L8,19 Z" Fill="#D9FFFFFF" Width="18" Height="18" Stretch="Uniform"/>
+                                                <Image Source="{Binding ThumbUrl}" Stretch="UniformToFill"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Title}" FontWeight="Medium" TextTrimming="CharacterEllipsis" ToolTip="{Binding Title}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding DurationText}" Foreground="{StaticResource Muted}" FontSize="12" Margin="12,0,0,0"/>
+                                            </Grid>
+                                            <ProgressBar Style="{StaticResource ThinBar}" Value="{Binding Percent}" Margin="0,8,0,0">
+                                                <ProgressBar.Resources>
+                                                    <Style TargetType="ProgressBar" BasedOn="{StaticResource ThinBar}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Done"><Setter Property="Foreground" Value="{StaticResource Green}"/></DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Paused"><Setter Property="Foreground" Value="{StaticResource Gold}"/></DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Failed"><Setter Property="Foreground" Value="{StaticResource Orange}"/></DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ProgressBar.Resources>
+                                            </ProgressBar>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="4" Text="{Binding StatusText}" TextAlignment="Right" TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center" FontSize="13" ToolTip="{Binding Error}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Downloading"><Setter Property="Foreground" Value="{StaticResource Text}"/></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Merging"><Setter Property="Foreground" Value="{StaticResource Text}"/></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Done"><Setter Property="Foreground" Value="{StaticResource Green}"/></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Paused"><Setter Property="Foreground" Value="{StaticResource Gold}"/></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Failed"><Setter Property="Foreground" Value="{StaticResource Orange}"/></DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Right: rate limit protection -->
+            <Border Grid.Column="2" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="Rate limit protection" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource Gold}"/>
+
+                        <Border Margin="0,16,0,0" Background="{StaticResource Bg}" BorderBrush="{Binding HealthBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="10" Height="10" Fill="{Binding HealthBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding HealthLabel}" FontWeight="SemiBold" Foreground="{Binding HealthBrush}"/>
+                                    <TextBlock Text="{Binding HealthNote}" Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap" MaxWidth="270"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="Download threads" FontWeight="SemiBold" Margin="0,16,0,8"/>
+                        <ListBox ItemsSource="{Binding Presets}" SelectedItem="{Binding SelectedPreset}" Style="{StaticResource PillList}"
+                                 AutomationProperties.Name="Download threads">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate><UniformGrid Rows="1"/></ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate><TextBlock Text="{Binding Name}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"/></DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock Text="{Binding SelectedPreset.Blurb}" Foreground="{StaticResource Muted}" FontSize="13" TextWrapping="Wrap" Margin="0,8,0,0"/>
+
+                        <Grid Margin="0,16,0,0">
+                            <TextBlock Text="Wait between videos" Foreground="{StaticResource Muted}" FontSize="13"/>
+                            <TextBlock Text="{Binding SelectedPreset.DelayText}" FontSize="13" HorizontalAlignment="Right"/>
+                        </Grid>
+
+                        <Grid Margin="0,12,0,6">
+                            <TextBlock Text="This hour" Foreground="{StaticResource Muted}" FontSize="13"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding UsedHour}" FontSize="13"/>
+                                <TextBlock Text=" of " FontSize="13"/>
+                                <TextBlock Text="{Binding SelectedPreset.PerHour}" FontSize="13"/>
+                            </StackPanel>
+                        </Grid>
+                        <ProgressBar Style="{StaticResource ThinBar}" Height="8" Value="{Binding HourPercent, Mode=OneWay}" Foreground="{Binding HealthBrush}"/>
+
+                        <Grid Margin="0,12,0,6">
+                            <TextBlock Text="Today" Foreground="{StaticResource Muted}" FontSize="13"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding UsedDay}" FontSize="13"/>
+                                <TextBlock Text=" of " FontSize="13"/>
+                                <TextBlock Text="{Binding SelectedPreset.PerDay}" FontSize="13"/>
+                            </StackPanel>
+                        </Grid>
+                        <ProgressBar Style="{StaticResource ThinBar}" Height="8" Value="{Binding DayPercent, Mode=OneWay}" Foreground="{Binding HealthBrush}"/>
+
+                        <Grid Margin="0,12,0,0">
+                            <TextBlock Text="Estimated finish" Foreground="{StaticResource Muted}" FontSize="13"/>
+                            <TextBlock Text="{Binding Eta}" FontSize="13" HorizontalAlignment="Right"/>
+                        </Grid>
+
+                        <Border BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Margin="0,16,0,0" Padding="0,8,0,0">
+                            <StackPanel>
+                                <Grid MinHeight="52">
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,60,0">
+                                        <TextBlock Text="Use my browser login" FontWeight="Medium"/>
+                                        <TextBlock Text="Ties requests to your account, which can get flagged" Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <ToggleButton Style="{StaticResource Switch}" IsChecked="{Binding UseBrowserCookies}" HorizontalAlignment="Right" AutomationProperties.Name="Use my browser login"/>
+                                </Grid>
+                                <Grid MinHeight="52">
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,60,0">
+                                        <TextBlock Text="Randomize waits" FontWeight="Medium"/>
+                                        <TextBlock Text="Never the same gap twice" Foreground="{StaticResource Muted}" FontSize="12"/>
+                                    </StackPanel>
+                                    <ToggleButton Style="{StaticResource Switch}" IsChecked="{Binding RandomizeWaits}" HorizontalAlignment="Right" AutomationProperties.Name="Randomize waits"/>
+                                </Grid>
+                                <Grid MinHeight="52">
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,60,0">
+                                        <TextBlock Text="Pause if blocked" FontWeight="Medium"/>
+                                        <TextBlock Text="Stops on a bot check or rate limit and tells you" Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <ToggleButton Style="{StaticResource Switch}" IsChecked="{Binding PauseWhenBlocked}" HorizontalAlignment="Right" AutomationProperties.Name="Pause if blocked"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Status bar -->
+        <Border Grid.Row="2" Background="{StaticResource Bar}" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="20,0">
+            <Grid>
+                <TextBlock Text="{Binding FooterText}" Foreground="{Binding FooterBrush}" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,200,0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="Next video in " Foreground="{StaticResource Muted}" FontSize="12"/>
+                    <TextBlock Text="{Binding Countdown}" Foreground="{StaticResource Gold}" FontFamily="Consolas" FontSize="12"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
